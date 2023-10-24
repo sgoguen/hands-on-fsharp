@@ -16,6 +16,20 @@ Steve Goguen
 
 ---
 
+# Agenda
+
+## Talking
+   * About Me and F#
+   * Ergonomics
+   * F#'s Origins in ML
+
+## Playing
+   * A Language for Types
+   * A Functional-First Language
+   * An Object-Oriented Language
+
+---
+
 # I asked a question on Twitter...
 
 ---
@@ -134,7 +148,7 @@ Meanwhile...
 # Here We Are Today
 
 * F# is still awesome!
-* But it's not taking over the world
+* Maybe it's not taking over the world
 * But it has changed the world and has **directly** influenced TypeScript, JavaScript, C#, and more  (Async/Await, LINQ, etc.)
 * It has quite literally influenced the designs of Swift, Kotlin, and Rust
 * And it will continue to lend its ideas to other languages
@@ -144,215 +158,66 @@ Meanwhile...
 
 # The Ergonomics
 
----
-
-# What are Ergonomics?
-
 * The study of people's efficiency in their working environment
 * The goal is to reduce effort and increase efficiency
-* In programming, this means reducing cognitive load and improving understanding
+* In programming, this means reducing:
+   * Reducing bugs
+   * Reducing cognitive load
+   * Improving understanding
+   * Faster feedback loops
+   * What else?
 
 ---
 
-# This is why we have things like:
+![bg contain right:40%](../images/bunch-of-things.png)
+
+# This is why F# has Features like:
    * Static typing
-   * Type inference
+   * Module Scoped Type inference (Not just function scoped)
+   * Higher-order functions
+   * Currying & Partial Application
    * Pattern matching / Active Patterns
    * REPLs / Interactive environments
    * Domain Specific Languages (DSLs)
-   * Composable Abstractions
-   * Higher-order functions
    * Bridging OOP and FP
 
 ---
 
 # But to understand why, we need to go back to the beginning...
 
-We need to talk about ML
+[We need to talk about ML](../topics/ml.md)
 
 ---
 
-# ML - The Progamming Language (Not Machine Learning)
+# Play Time!
 
-* F# is a member of the ML language family (OCaml, F#, SML, Elm, etc.)
-* It's the result of Don Syme wanting to bring the power of OCaml to the .NET platform
-* He even added Generics to .NET to make it possible.
-   * I'm serious!
-   * .NET generics were designed to be powerful enough to support ML's type system without contorting the compiler.
-* But ML goes back to 1973 when Robin Milner and others needed a programming language to automated theorem prover tactics.
+
+1. [Chalking up Ideas with Types](../topics/chalking-ideas.md)
+2. [A Functional First Language](../topics/functional-first.md)
+3. [An Object-Oriented Language](../topics/object-oriented.fsx)
 
 ---
 
-# ML - Birthed from Theorem Provers
 
-* ML was born from the LCF (Logic for Computable Functions) project at Stanford
-* The goal was to create a theorem prover that could be trusted
-* LCF has become the basis for many theorem provers today
-* Theorem provers are used to prove mathematical theorems
-* They are used in formal verification of software and hardware
-* When writing theorem tactics - You want a language you can trust
-* When it compiles, it's correct to a degree
+# Conclusion
 
----
-
-# A Language to Describe Mathematical Objects
-
-```fsharp
-type Proposition = 
-   | And of Proposition * Proposition
-   | Or of Proposition * Proposition
-   | Implies of Proposition * Proposition
-   | Not of Proposition
-   | True
-   | False
-```
+* ML was designed to be a language to describe and transform mathematical objects and proofs.  **It was designed to be trusted.**
+* F# was designed to be a language that was ergonomic for developers.
+   * It provides a powerful core functional language (ML) that's design with rigor and precision of thought first.
+   * It's designed to bridge the gap between functional and object-oriented programming coherently.
+* **It's designed to build production software - Not just mathy code**
 
 ---
 
-# A Language to Transform Mathematical Objects
+# Thank You!
 
-```fsharp
-let rec simplify = function
-   | And (True, p) | And (p, True)         -> simplify p
-   | And (False, _) | And (_, False)       -> False
-   | Or (True, _) | Or (_, True)           -> True
-   | Or (False, p) | Or (p, False)         -> simplify p
-   | Implies (True, p) | Implies (_, True) -> simplify p
-   | Implies (False, _)                    -> True
-   | Implies (p, False)                    -> Not (simplify p)
-   | Not True                              -> False
-   | Not False                             -> True
-   | Not p                                 -> Not (simplify p)   
-   | p                                     -> p
-```
+## F# Learning Resources
 
----
+* [F# for Fun and Profit](https://fsharpforfunandprofit.com/) - Scott Wlaschin's site is the best place to start learning F#
+* [F# Weekly](https://sergeytihon.com/) - Sergey Tihon will keep you up to date on all things F#
+* [https://fsharp.org/](https://fsharp.org/) - The F# Software Foundation
 
-# The Motivation for ML
+## Hit Me Up
 
-* It's not enough to just write programs the transform symbols
-* The compiler needs to be able to reason about the correctness of the program from a typed perspective
-* While Lisp was the first language to use lambda calculus, it was untyped
-* ML not only used a typed lambda calculus, but it also used a type system that could infer types
-* This type inference system is called Hindley-Milner
-* And it's way more powerful than you might think
-
----
-
-# Let's Play with It!
-
-Looking for [the code](./math-objects.fsx)?
-
----
-
-# Play Agenda
-
-* Define custom operators - Notice how the compiler infers the types!
-* Let's explore incomplete pattern matching warnings
-
----
-
-# Currying & Partial Application
-
---- 
-
-# Currying
-
-Turning functions with multiple arguments into a series of functions that take a single argument
-
-```typescript
-function add(x: int, y: int): int {
-   return x + y
-}
-```
-
-Curried
-
-```typescript
-function add(x: int) {
-   return function(y: int): int {
-      return x + y
-   }
-}
-```
-
-* F# and ML are curried by default
-
----
-
-## Partial Application
-
-When you call a function with fewer arguments than it expects, it returns a function that takes the remaining arguments
-
-
-```typescript
-function add(x: int) {
-   return function(y: int): int {
-      return x + y
-   }
-}
-
-const addOne = add(1);
-const result = addOne(2); // 3
-```
-
----
-
-## Currying & Partial Application in F#
-
-```fsharp
-let add x y = x + y
-let addOne = add 1
-let result = addOne 2 // 3
-```
-
----
-
-# Using Currying to Incrementally Abstract a Function
-
-Let's define a normal function that add up some integers
-
-```fsharp
-let sum list = 
-   let mutable result = 0
-   for i in list do
-      result <- result + i
-   result
-```
-
-[Let's play](../examples/sum.fsx)
-
----
-
-# Let's Add a Parameter
-
-We may add an initial value
-
-```fsharp
-let sum initalValue list = 
-   let mutable result = initalValue
-   for i in list do
-      result <- result + i
-   result
-```
-
----
-
-# Adding a Final Parameter to Make it Generic
-
-* We can pass a function as a parameter
-* And turn our "sum" into a higher-order function called fold
-
-```fsharp
-let fold f initalValue list = 
-   let mutable result = initalValue
-   for i in list do
-      result <- f result i
-   result
-```
-
----
-
-# Currying
-
----
+* Steve Goguen
+* Email: first-initial+last-name@gmail.com

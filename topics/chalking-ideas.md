@@ -9,20 +9,29 @@ marp: true
 
 ---
 
-# The Triumvirate Types
+![bg contain](../images/fewer-abstractions.png)
 
-- Tuples - Combines multiple values
-  - Corresponds to AND in logic
-  - `type Person = string * int`
-  - `let person = ("John", 25)`
-- Unions - Provides a choice of values 
-  - Corresponds to OR in logic
-  - `type Result = Success of Person | Error of string`
-  - `let result = Success ("John", 25)`
-- Functions - Maps input values to output values
-  - Corresponds to IMPLIES in logic
-  - `type AgePerson = Person -> Person`
-  - `let ageOneYear (name, age) = (name, age + 1)`
+---
+
+# The Type Triumvirate
+
+You can model almost anything with these three types
+
+### Tuples - Combines multiple values - **conjunctions (AND)**
+```fsharp
+type Person = string * int
+let person = ("John", 25)
+```
+### Unions - Provides a choice of values -  **implications (OR)**
+```fsharp
+type Result = Success of Person | Error of string
+let result = Success ("John", 25)
+```
+### Functions - Maps input values to output values  - **logical implications ( &rarr; )**
+```fsharp
+type AgePerson = Person -> Person
+let ageOneYear (name, age) = (name, age + 1)
+```
 
 ---
 
@@ -110,33 +119,3 @@ val fold : ('a -> 'b -> 'a) -> 'a -> 'b List -> 'a
 val find : ('a -> bool) -> 'a List -> 'a option
 
 ```
-
----
-
-```fsharp
-type Role = Admin | User | Guest
-
-type Permission = Read | Write | Execute
-
-type AccessRule = {
-    Role: Role
-    Permissions: Permission set
-}
-```
-
----
-
-```fsharp
-type UIComponent = 
-    | Button of Label: string
-    | TextBox of Placeholder: string
-    | Dropdown of Options: string list
-
-type UserAction =
-    | Click
-    | Input of string
-    | Select of string
-```
-
----
-
